@@ -1,23 +1,24 @@
 public class Thief implements MailService {
-    int price;
-    int summPrice;
+    int minPrice;//минимальная цена посылки, которую вор забирает
+    int summPrice;//суммарная стоимость посылок
 
-
-    public Thief(int price) {
-        this.price = price;
+    public Thief(int minPrice) {
+        this.minPrice = minPrice;
         summPrice = 0;
-
     }
 
-    public int getStolenValue() {
-        return summPrice + price;
+    public int getStolenValue(int price) {
+        return summPrice += price;
     }
 
     @Override
     public Sendable processMail(Sendable mail) {
-        if (mail instanceof MailPackage) {
-            Package newPackage = new Package("stones instead of " + ((MailPackage) mail).getContent().getContent(), 0);
-            return new MailPackage(mail.getFrom(), mail.getTo(), newPackage);
+        if (minPrice <= ((MailPackage) mail).getContent().getPrice()) {
+            if (mail instanceof MailPackage) {
+                Package newPackage = new Package("stones instead of " + ((MailPackage) mail).getContent().getContent(), 0);
+                summPrice = getStolenValue(((MailPackage) mail).getContent().getPrice());
+                return new MailPackage(mail.getFrom(), mail.getTo(), newPackage);
+            }
         }
         return mail;
     }
