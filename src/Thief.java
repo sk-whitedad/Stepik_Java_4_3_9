@@ -20,6 +20,7 @@ public class Thief implements MailService {
                 return new MailPackage(mail.getFrom(), mail.getTo(), newPackage);
             }
         }
+        1
         return mail;
     }
 }
