@@ -1,19 +1,28 @@
 public class UntrustworthyMailWorker implements MailService {
     MailService[] mailServices;
-    Sendable sendable;
+    MailService realMailService = new RealMailService();
 
-    public UntrustworthyMailWorker(MailService[] mailServices, Sendable sendable) {
+    public UntrustworthyMailWorker(MailService[] mailServices) {
         this.mailServices = mailServices;
-        this.sendable = sendable;
-        processMail(sendable);
     }
 
-    public RealMailService getRealMailService() {
-        return null;
+    public MailService getRealMailService() {
+        return realMailService;
     }
 
     @Override
     public Sendable processMail(Sendable mail) {
-        return null;
+
+        Sendable processed = mail;
+
+        for (int i = 0; i < mailServices.length; i++) {
+
+            processed = mailServices[i].processMail(processed);
+
+        }
+
+        return realMailService.processMail(mail);
+
+
     }
 }
